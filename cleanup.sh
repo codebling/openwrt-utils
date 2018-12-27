@@ -3,7 +3,7 @@
 #do opkg update first
 #example: ./opkgremovepartlyinstalledpackage.sh pulseaudio-daemon
 
-echo "WARN: INTENDED FOR OpenWRT 18.06 ONLY, USE AT OWN RISK ON OTHER VERSIONS"
+echo "WARNING: INTENDED FOR OpenWRT 18.06 ONLY, USE AT OWN RISK ON OTHER VERSIONS"
 
 if [ $# -eq 0 ]
 then
