@@ -51,10 +51,12 @@ do
                                         # -v return only lines that DO NOT match
                                         # -E extended regex
             # sort -r                 #sort the lines so that we delete files before we try to delete the directories containing them
-            # sed 's/^./\/overlay/'   #add prefix /overlay/ to every line
-            FILES=`cat $PACKAGEFILE | tar -Oxz ./data.tar.gz | tar -tz | grep -vE '^\./$' | sort -r | sed 's/^./\/overlay/'`
-            for FILE in $FILES
+            # sed 's/^\.//'           #remove '.'  at the start of every line
+            FILES=`cat $PACKAGEFILE | tar -Oxz ./data.tar.gz | tar -tz | grep -vE '^\./$' | sort -r | sed 's/^\.//'`
+            for PFILE in $FILES
             do
+                for FILE in "/overlay$PFILE" "/overlay/upper$PFILE"
+                do
                 echo "Checking for $FILE"
                 if [ -f $FILE -o -L $FILE ]
                 then
@@ -66,6 +68,7 @@ do
                     echo "Try to remove directory $FILE (will only work on empty directories)"
                     rmdir $FILE
                 fi
+                done
             done
         done
     else
