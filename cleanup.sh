@@ -22,7 +22,11 @@ echo "*** Done updating package lists ***"
 LASTDIR=`pwd`
 TEMPDIR=`mktemp -d`
 cd $TEMPDIR
-opkg --add-dest cleanup:$TEMPDIR -d cleanup --tmp-dir $TEMPDIR --download-only install $1
+
+for PACKAGE in "$@"
+do
+echo "Downloading $PACKAGE and dependencies..."
+opkg --add-dest cleanup:$TEMPDIR -d cleanup --tmp-dir $TEMPDIR --download-only install $PACKAGE
 if [ $? -eq 0 ]
 then
     for PACKAGEFILE in `ls *.ipk`
@@ -61,6 +65,7 @@ then
 else
     echo "Failed to download package files. Cleaning up..."
 fi
+done
 echo "Removing opkg package lists from ram..."
 rm -Rf /tmp/opkg-lists
 echo "OK. You will need to run 'opkg update' again before installing packages."
