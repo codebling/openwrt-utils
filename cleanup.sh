@@ -52,10 +52,10 @@ do
                                         # -E extended regex
             # sort -r                 #sort the lines so that we delete files before we try to delete the directories containing them
             # sed 's/^\.//'           #remove '.'  at the start of every line
-            FILES=`cat $PACKAGEFILE | tar -Oxz ./data.tar.gz | tar -tz | grep -vE '^\./$' | sort -r | sed 's/^\.//'`
-            for PFILE in $FILES
+            PACKAGE_FILES=`cat $PACKAGEFILE | tar -Oxz ./data.tar.gz | tar -tz | grep -vE '^\./$' | sort -r | sed 's/^\.//'`
+            for PACKAGE_FILE in $PACKAGE_FILES
             do
-                for FILE in "/overlay$PFILE" "/overlay/upper$PFILE"
+                for FILE in "/overlay$PACKAGE_FILE" "/overlay/upper$PACKAGE_FILE"
                 do
                     echo "Checking for $FILE"
                     if [ -f $FILE -o -L $FILE ]
