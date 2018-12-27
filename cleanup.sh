@@ -63,7 +63,8 @@ do
             done
         done
     else
-        echo "Failed to download package files. Cleaning up..."
+        echo "Failed to download package $PACKAGE or one of its depencies. Skipping remaining packages and cleaning up..."
+        break
     fi
 done
 echo "Removing opkg package lists from ram..."
