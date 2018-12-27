@@ -5,6 +5,15 @@
 
 echo "WARN: INTENDED FOR OpenWRT 18.06 ONLY, USE AT OWN RISK ON OTHER VERSIONS"
 
+if [ $# -eq 0 ]
+then
+  echo "Usage: opkg-cleanup.sh <packages>"
+  echo "  where <packages> are a list of packages that were partially installed with opkg install"
+  echo "  e.g. ./opkg-cleanup.sh gcc"
+  echo "  separate multiple packages with a space, e.g. ./opkg-cleanup.sh luci-app-wol gcc"
+  exit 1
+fi
+
 #update the package lists
 echo "*** Updating package lists ***"
 opkg update
