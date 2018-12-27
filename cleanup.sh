@@ -57,17 +57,17 @@ do
             do
                 for FILE in "/overlay$PFILE" "/overlay/upper$PFILE"
                 do
-                echo "Checking for $FILE"
-                if [ -f $FILE -o -L $FILE ]
-                then
-                    echo "Removing file $FILE"
-                    rm -f $FILE
-                fi
-                if [ -d $FILE ]
-                then
-                    echo "Try to remove directory $FILE (will only work on empty directories)"
-                    rmdir $FILE
-                fi
+                    echo "Checking for $FILE"
+                    if [ -f $FILE -o -L $FILE ]
+                    then
+                        echo "Removing file $FILE"
+                        rm -f $FILE
+                    fi
+                    if [ -d $FILE ]
+                    then
+                        echo "Try to remove directory $FILE (will only work on empty directories)"
+                        rmdir $FILE
+                    fi
                 done
             done
         done
