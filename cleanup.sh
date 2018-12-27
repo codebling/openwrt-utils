@@ -25,6 +25,12 @@ cd $TEMPDIR
 
 for PACKAGE in "$@"
 do
+    IS_INSTALLED=`opkg list-installed | grep -Ec "^$PACKAGE - "`
+    if [ "$IS_INSTALLED" -gt 0 ]
+    then
+        echo "ERROR! Package $PACKAGE is listed as being installed! Remove using \"opkg remove $PACKAGE\" before trying to clean it up. Aborting..."
+        break
+    fi
     echo "Downloading $PACKAGE and dependencies..."
     opkg --add-dest cleanup:$TEMPDIR -d cleanup --tmp-dir $TEMPDIR --download-only install $PACKAGE
     if [ $? -eq 0 ]
