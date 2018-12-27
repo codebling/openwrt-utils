@@ -25,46 +25,46 @@ cd $TEMPDIR
 
 for PACKAGE in "$@"
 do
-echo "Downloading $PACKAGE and dependencies..."
-opkg --add-dest cleanup:$TEMPDIR -d cleanup --tmp-dir $TEMPDIR --download-only install $PACKAGE
-if [ $? -eq 0 ]
-then
-    for PACKAGEFILE in `ls *.ipk`
-    do
-        echo "Checking package file $PACKAGEFILE"
-        #create a list of files in the archive
-        # cat $PACKAGEFILE        #pipe raw archive contents
-        # tar -Oxz ./data.tar.gz  #extract the contents of the archive's data.tar.gz to stdout
-                                    # -O to stdout
-                                    # -x extract files
-                                    # -z ungzip
-        # tar -tz                 #list files in archive
-                                    # -t list files
-                                    # -z ungzip
-        # grep -vE '^\./$'        #remove line containing only "./"
-                                    # -v return only lines that DO NOT match
-                                    # -E extended regex
-        # sort -r                 #sort the lines so that we delete files before we try to delete the directories containing them
-        # sed 's/^./\/overlay/'   #add prefix /overlay/ to every line
-        FILES=`cat $PACKAGEFILE | tar -Oxz ./data.tar.gz | tar -tz | grep -vE '^\./$' | sort -r | sed 's/^./\/overlay/'`
-        for FILE in $FILES
+    echo "Downloading $PACKAGE and dependencies..."
+    opkg --add-dest cleanup:$TEMPDIR -d cleanup --tmp-dir $TEMPDIR --download-only install $PACKAGE
+    if [ $? -eq 0 ]
+    then
+        for PACKAGEFILE in `ls *.ipk`
         do
-            echo "Checking for $FILE"
-            if [ -f $FILE -o -L $FILE ]
-            then
-                echo "Removing file $FILE"
-                rm -f $FILE
-            fi
-            if [ -d $FILE ]
-            then
-                echo "Try to remove directory $FILE (will only work on empty directories)"
-                rmdir $FILE
-            fi
+            echo "Checking package file $PACKAGEFILE"
+            #create a list of files in the archive
+            # cat $PACKAGEFILE        #pipe raw archive contents
+            # tar -Oxz ./data.tar.gz  #extract the contents of the archive's data.tar.gz to stdout
+                                        # -O to stdout
+                                        # -x extract files
+                                        # -z ungzip
+            # tar -tz                 #list files in archive
+                                        # -t list files
+                                        # -z ungzip
+            # grep -vE '^\./$'        #remove line containing only "./"
+                                        # -v return only lines that DO NOT match
+                                        # -E extended regex
+            # sort -r                 #sort the lines so that we delete files before we try to delete the directories containing them
+            # sed 's/^./\/overlay/'   #add prefix /overlay/ to every line
+            FILES=`cat $PACKAGEFILE | tar -Oxz ./data.tar.gz | tar -tz | grep -vE '^\./$' | sort -r | sed 's/^./\/overlay/'`
+            for FILE in $FILES
+            do
+                echo "Checking for $FILE"
+                if [ -f $FILE -o -L $FILE ]
+                then
+                    echo "Removing file $FILE"
+                    rm -f $FILE
+                fi
+                if [ -d $FILE ]
+                then
+                    echo "Try to remove directory $FILE (will only work on empty directories)"
+                    rmdir $FILE
+                fi
+            done
         done
-    done
-else
-    echo "Failed to download package files. Cleaning up..."
-fi
+    else
+        echo "Failed to download package files. Cleaning up..."
+    fi
 done
 echo "Removing opkg package lists from ram..."
 rm -Rf /tmp/opkg-lists
